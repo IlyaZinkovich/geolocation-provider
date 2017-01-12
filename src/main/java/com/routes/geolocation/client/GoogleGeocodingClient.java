@@ -8,6 +8,7 @@ import com.routes.geolocation.model.GeoObject;
 import com.routes.geolocation.model.UnknownGeoObject;
 
 import static com.google.maps.GeocodingApi.geocode;
+import static com.google.maps.model.AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1;
 import static com.google.maps.model.AddressComponentType.COUNTRY;
 import static com.google.maps.model.AddressComponentType.LOCALITY;
 
@@ -32,7 +33,7 @@ public class GoogleGeocodingClient {
         String country = null;
         for (AddressComponent addressComponent : geocodingResult.addressComponents) {
             AddressComponentType type = addressComponent.types[0];
-            if (LOCALITY.equals(type))
+            if (LOCALITY.equals(type) || ADMINISTRATIVE_AREA_LEVEL_1.equals(type))
                 city = addressComponent.longName;
             else if (COUNTRY.equals(type))
                 country = addressComponent.longName;
