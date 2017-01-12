@@ -31,14 +31,18 @@ public class GoogleGeocodingClient {
     private GeoObject getKnownGeoObject(GeocodingResult geocodingResult) {
         String city = null;
         String country = null;
+        String administrativeAreaLevel1 = null;
         for (AddressComponent addressComponent : geocodingResult.addressComponents) {
             AddressComponentType type = addressComponent.types[0];
-            if (LOCALITY.equals(type) || ADMINISTRATIVE_AREA_LEVEL_1.equals(type))
+            if (LOCALITY.equals(type))
                 city = addressComponent.longName;
             else if (COUNTRY.equals(type))
                 country = addressComponent.longName;
+            else if(ADMINISTRATIVE_AREA_LEVEL_1.equals(type))
+                administrativeAreaLevel1 = addressComponent.longName;
             if (city != null && country != null) break;
         }
+        if (city == null) city = administrativeAreaLevel1;
         return new GeoObject(city, country,
                 geocodingResult.geometry.location.lat, geocodingResult.geometry.location.lng);
     }
