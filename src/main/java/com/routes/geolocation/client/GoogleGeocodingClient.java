@@ -7,6 +7,9 @@ import com.google.maps.model.GeocodingResult;
 import com.routes.geolocation.model.GeoObject;
 import com.routes.geolocation.model.UnknownGeoObject;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import static com.google.maps.GeocodingApi.geocode;
 import static com.google.maps.model.AddressComponentType.ADMINISTRATIVE_AREA_LEVEL_1;
 import static com.google.maps.model.AddressComponentType.COUNTRY;
@@ -15,6 +18,8 @@ import static com.google.maps.model.AddressComponentType.LOCALITY;
 public class GoogleGeocodingClient {
 
     private GeoApiContext context;
+
+    private Map<String, GeoObject> geoObjectCache = new ConcurrentHashMap<>();
 
     public GoogleGeocodingClient(String googleApiKey) {
         this.context = new GeoApiContext().setApiKey(googleApiKey);;
@@ -25,7 +30,9 @@ public class GoogleGeocodingClient {
         if (geocodingResults.length == 0)
             return new UnknownGeoObject(name, name, null, null);
         GeocodingResult geocodingResult = geocodingResults[0];
-        return getKnownGeoObject(geocodingResult);
+        GeoObject knownGeoObject = getKnownGeoObject(geocodingResult);
+        geoObjectCache.putIfAbsent(name, knownGeoObject);
+        return knownGeoObject;
     }
 
     private GeoObject getKnownGeoObject(GeocodingResult geocodingResult) {
