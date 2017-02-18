@@ -1,4 +1,4 @@
-package com.routes.geolocation.client;
+package com.routes.geolocation.provider;
 
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.AddressComponent;
@@ -15,13 +15,13 @@ import static com.google.maps.model.AddressComponentType.ADMINISTRATIVE_AREA_LEV
 import static com.google.maps.model.AddressComponentType.COUNTRY;
 import static com.google.maps.model.AddressComponentType.LOCALITY;
 
-public class GoogleGeocodingClient {
+public class GeolocationProvider {
 
     private GeoApiContext context;
 
     private Map<String, GeoObject> geoObjectCache = new ConcurrentHashMap<>();
 
-    public GoogleGeocodingClient(String googleApiKey) {
+    public GeolocationProvider(String googleApiKey) {
         this.context = new GeoApiContext().setApiKey(googleApiKey);;
     }
 
