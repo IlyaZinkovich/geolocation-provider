@@ -26,6 +26,8 @@ public class GeolocationProvider {
     }
 
     public GeoObject findGeoObject(String name) {
+        GeoObject cachedGeoObject = geoObjectCache.get(name);
+        if (cachedGeoObject != null) return cachedGeoObject;
         GeocodingResult[] geocodingResults = getLocation(name, context);
         if (geocodingResults.length == 0)
             return new UnknownGeoObject(name, name, null, null);
